@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 
+// TODO 
+// This page is for the contact form, what you need to do is to create a form with the following fields:
+// We will modified the code such that fill the necessary information about the lost and found item
+
+// The finder can either fill the description of the item or let it generate by the api in the query.js
+
 function Contact() {
     const [email, setEmail] = useState('')
     const [message, setMessage] = useState('')

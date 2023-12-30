@@ -1,22 +1,17 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const userSchema = new Schema({
-    name: {type:String},
-    email: {type:String},
-    website: {type:String},
-    entryDate: {type:Date, default:Date.now}
-})
+// Define the schema for items
+const itemSchema = new Schema({
+    description: { type: String, required: true },
+    picture: { type: String, required: true }, // the url for the image
+    dateLost: { type: Date }, // This can be optional
+    locationFound: { type: String },
+    status: { type: String, default: 'Unclaimed' }, // e.g., 'Claimed', 'Unclaimed'
+    finder_name: { type: String, default: 'Anonymous' }
+});
 
-const contactSchema = new Schema({
-    email: {type:String, required:true},
-    website: {type:String, required:true},
-    message: {type:String, required:true},
-    entryDate: {type:Date, default:Date.now}
-})
-
-const Users = mongoose.model('Users', userSchema, 'users')
-const Contact = mongoose.model('Contact', contactSchema, 'contact_form')
-const mySchemas = {'Users':Users, 'Contact':Contact}
+const Items = mongoose.model('Items', userSchema, 'items')
+const mySchemas = {'Items':Items}
 
 module.exports = mySchemas
