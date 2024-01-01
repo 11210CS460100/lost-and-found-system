@@ -11,7 +11,7 @@ const itemSchema = new Schema({
     finder_name: { type: String, default: 'Anonymous' }
 });
 
-const Items = mongoose.model('Items', userSchema, 'items')
+const Items = mongoose.model('Items', itemSchema, 'items')
 const mySchemas = {'Items':Items}
 
 module.exports = mySchemas

@@ -1,0 +1,82 @@
+[
+    {
+        "description": "there is a usb drive that is sitting on a table",
+        "picture": "https://imgur.com/a/lk8d26u",
+        "dateLost": "2023-01-15",
+        "locationFound": "Central Park, New York",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_2.jpg",
+        "dateLost": "2023-02-05",
+        "locationFound": "Union Station, Washington D.C.",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_3.jpg",
+        "dateLost": "2023-03-10",
+        "locationFound": "Venice Beach, Los Angeles",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_4.jpg",
+        "dateLost": "2023-04-22",
+        "locationFound": "Millennium Park, Chicago",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_5.jpg",
+        "dateLost": "2023-05-30",
+        "locationFound": "Harvard Square, Cambridge",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_6.jpg",
+        "dateLost": "2023-06-12",
+        "locationFound": "Pike Place Market, Seattle",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_7.jpg",
+        "dateLost": "2023-07-04",
+        "locationFound": "Golden Gate Park, San Francisco",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_8.jpg",
+        "dateLost": "2023-08-21",
+        "locationFound": "Disney World, Orlando",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_9.jpg",
+        "dateLost": "2023-09-15",
+        "locationFound": "French Quarter, New Orleans",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    },
+    {
+        "description": "",
+        "picture": "url_to_image_10.jpg",
+        "dateLost": "2023-10-28",
+        "locationFound": "The Strip, Las Vegas",
+        "status": "Unclaimed",
+        "finder_name": "Anonymous"
+    }
+]
