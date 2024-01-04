@@ -9,10 +9,10 @@ import AddItem from "./AddItem";
 // now replace the content https://imgur.com/a/y7a2zwZ with the image ../assets/images/good-day-to-code.jpg
 
 
-// TODO 
-// 1. currently, the image can't shown properly, this problem may be caused by 
+// TODO
+// 1. currently, the image can't shown properly, this problem may be caused by
 // https://stackoverflow.com/questions/40489569/images-from-imgur-com-is-not-displaying-on-website
-// for the implementation for the backend, we will only give the url for the image. Which I think 
+// for the implementation for the backend, we will only give the url for the image. Which I think
 // will be the imgur url if expected.
 
 
@@ -41,16 +41,14 @@ export default function Home() {
         let str = e.target.value;
         let isMessageEmpty = str === ""
 
-        if(isMessageEmpty)
-        {
-
-        }else
+        if(!isMessageEmpty)
         {
             let keywords = str.split(',')
             keywords = keywords.map((word) => word.trim())
-            console.log(keywords)
+            console.log("keywords = " + keywords)
+            console.log("items = " + items)
             getItemsFromBackend(e)
-            setItems(() => [...items, e.target.value])
+            setItems(() => [e.target.value, ...items])  // add item to the front to prevent scrolling
         }
     }
 
@@ -86,6 +84,7 @@ export default function Home() {
 
         <div>
             <SearchBar searchBarChangedCallback={searchBarChange} />
+            <br/>
             <ItemBlock items={items}> </ItemBlock>
         </div>
     )
