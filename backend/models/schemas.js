@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+// Define the Finder Schema
+const finderSchema = new Schema({
+    name: { type: String, default: 'Anonymous' },
+    contact: { type: String } // You can add more fields as needed
+});
+
 // Define the schema for items
 const itemSchema = new Schema({
     description: { type: String, required: true },
@@ -8,10 +14,10 @@ const itemSchema = new Schema({
     dateLost: { type: Date }, // This can be optional
     locationFound: { type: String },
     status: { type: String, default: 'Unclaimed' }, // e.g., 'Claimed', 'Unclaimed'
-    finder_name: { type: String, default: 'Anonymous' }
+    finder: finderSchema
 });
 
-const Items = mongoose.model('Items', userSchema, 'items')
+const Items = mongoose.model('Items', itemSchema, 'items')
 const mySchemas = {'Items':Items}
 
 module.exports = mySchemas
