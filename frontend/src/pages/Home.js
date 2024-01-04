@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react"
+import axios from "axios"
 
 import ItemBlock from "../components/ItemBlock";
 import SearchBar from "../components/SearchBar";
+import AddItem from "./AddItem";
 
 // now replace the content https://imgur.com/a/GbM6sKT with the image ../assets/images/eat-sleep-code-repeat.jpg
 // now replace the content https://imgur.com/a/y7a2zwZ with the image ../assets/images/good-day-to-code.jpg
@@ -35,13 +37,36 @@ const itemSchema = new Schema({
 export default function Home() {
     const [items, setItems] = useState([])
 
-    const SearchBarChange = (e) => {
-        var isMessageEmpty = e.target.value == ""
-        console.log('SearchBarChange : %s', ...items)
-        console.log('SearchBarChange : %s', isMessageEmpty.toString())
+    const searchBarChange = (e) => {
+        let str = e.target.value;
+        let isMessageEmpty = str === ""
 
-        
-        setItems(() => [...items, e.target.value])
+        if(isMessageEmpty)
+        {
+
+        }else
+        {
+            let keywords = str.split(',')
+            keywords = keywords.map((word) => word.trim())
+            console.log(keywords)
+            getItemsFromBackend(e)
+            setItems(() => [...items, e.target.value])
+        }
+    }
+
+    const getItemsFromBackend = async (e) => {
+        await axios.post('http://localhost:4000/showimage', {
+            method: "post",
+            body: JSON.stringify({ '123': '456' }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => console.log(err))
+
     }
 
     return (
@@ -60,7 +85,7 @@ export default function Home() {
         // </>
 
         <div>
-            <SearchBar searchBarChangedCallback={SearchBarChange} />
+            <SearchBar searchBarChangedCallback={searchBarChange} />
             <ItemBlock items={items}> </ItemBlock>
         </div>
     )
