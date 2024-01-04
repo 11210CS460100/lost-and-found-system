@@ -1,4 +1,5 @@
 import './App.css'
+import './components/Components.css'
 import Router from './components/Router'
 import Context from './components/Context'
 

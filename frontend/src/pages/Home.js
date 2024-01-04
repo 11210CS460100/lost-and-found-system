@@ -1,5 +1,11 @@
+import { useState, useEffect } from "react"
+
+import ItemBlock from "../components/ItemBlock";
+import SearchBar from "../components/SearchBar";
+
 // now replace the content https://imgur.com/a/GbM6sKT with the image ../assets/images/eat-sleep-code-repeat.jpg
 // now replace the content https://imgur.com/a/y7a2zwZ with the image ../assets/images/good-day-to-code.jpg
+
 
 // TODO 
 // 1. currently, the image can't shown properly, this problem may be caused by 
@@ -27,19 +33,35 @@ const itemSchema = new Schema({
 // Also, the backend team will create the APIs for the frontend team to use, which will be released later on
 
 export default function Home() {
+    const [items, setItems] = useState([])
+
+    const SearchBarChange = (e) => {
+        var isMessageEmpty = e.target.value == ""
+        console.log('SearchBarChange : %s', ...items)
+        console.log('SearchBarChange : %s', isMessageEmpty.toString())
+
+        
+        setItems(() => [...items, e.target.value])
+    }
+
     return (
-        <>
-            <h1>Homepage</h1>
-            <ul className="productBox">
-                <li>
-                    <a href="/product/143" className="productLink"> <img className="productImage" src="https://imgur.com/a/GbM6sKT" alt="Eat, Sleep, Code, Repeat"/></a>
-                    <br/><a href="/product/143" className="productLink">It's a good day to code</a>
-                </li>
-                <li>
-                    <a href="/product/486" className="productLink"><img className="productImage" src={require('../assets/images/eat-sleep-code-repeat.jpg')} alt="Eat. Sleep. Code. Repeat."/></a>
-                    <br /><a href="/product/486" className="productLink">Eat. Sleep. Code. Repeat.</a>
-                </li>
-            </ul>
-        </>
+        // <>
+        //     <h1>Homepage</h1>
+        //     <ul className="productBox">
+        //         <li>
+        //             <a href="/product/143" className="productLink"> <img className="productImage" src="https://imgur.com/a/GbM6sKT" alt="Eat, Sleep, Code, Repeat"/></a>
+        //             <br/><a href="/product/143" className="productLink">It's a good day to code</a>
+        //         </li>
+        //         <li>
+        //             <a href="/product/486" className="productLink"><img className="productImage" src={require('../assets/images/eat-sleep-code-repeat.jpg')} alt="Eat. Sleep. Code. Repeat."/></a>
+        //             <br /><a href="/product/486" className="productLink">Eat. Sleep. Code. Repeat.</a>
+        //         </li>
+        //     </ul>
+        // </>
+
+        <div>
+            <SearchBar searchBarChangedCallback={SearchBarChange} />
+            <ItemBlock items={items}> </ItemBlock>
+        </div>
     )
 }
