@@ -9,7 +9,7 @@ const finderSchema = new Schema({
 
 // Define the schema for items
 const itemSchema = new Schema({
-    description: { type: String, required: true },
+    description: { type: Array, required: true },
     picture: { type: String, required: true }, // the url for the image
     dateLost: { type: Date }, // This can be optional
     locationFound: { type: String },

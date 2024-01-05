@@ -111,7 +111,7 @@ router.post('/addItem', asyncHandler(async (req, res) => {
     // example of body 
 
     // Create an instance of the Items model
-    const item = new schemas.Items(req.body);
+    const item = new schemas.Items(JSON.parse(req.body.body));
 
     console.log(item)
 	try {
