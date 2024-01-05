@@ -44,43 +44,30 @@ export default function Home() {
         if(!isMessageEmpty)
         {
             let keywords = str.split(',')
-            keywords = keywords.map((word) => word.trim())
-            console.log("keywords = " + keywords)
-            console.log("items = " + items)
-            getItemsFromBackend(e)
+            keywords = keywords.map((word) => word.trim()).filter(str => str)
+            // console.log("keywords = " + keywords)
+            // console.log("items = " + items)
+            getItemsFromBackend(keywords)
             setItems(() => [e.target.value, ...items])  // add item to the front to prevent scrolling
         }
     }
 
-    const getItemsFromBackend = async (e) => {
-        await axios.post('http://localhost:4000/showimage', {
+    const getItemsFromBackend = async (keywords) => {
+        await axios.post('http://127.0.0.1:4000/keywords', {
             method: "post",
-            body: JSON.stringify({ '123': '456' }),
+            body: JSON.stringify(keywords),
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         .then(res => {
-            console.log(res)
+            console.log(JSON.parse(res.config.data).body)
         })
         .catch(err => console.log(err))
 
     }
 
     return (
-        // <>
-        //     <h1>Homepage</h1>
-        //     <ul className="productBox">
-        //         <li>
-        //             <a href="/product/143" className="productLink"> <img className="productImage" src="https://imgur.com/a/GbM6sKT" alt="Eat, Sleep, Code, Repeat"/></a>
-        //             <br/><a href="/product/143" className="productLink">It's a good day to code</a>
-        //         </li>
-        //         <li>
-        //             <a href="/product/486" className="productLink"><img className="productImage" src={require('../assets/images/eat-sleep-code-repeat.jpg')} alt="Eat. Sleep. Code. Repeat."/></a>
-        //             <br /><a href="/product/486" className="productLink">Eat. Sleep. Code. Repeat.</a>
-        //         </li>
-        //     </ul>
-        // </>
 
         <div>
             <SearchBar searchBarChangedCallback={searchBarChange} />
