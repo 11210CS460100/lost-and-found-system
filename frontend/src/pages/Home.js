@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react"
+import axios from "axios"
 
 import ItemBlock from "../components/ItemBlock";
 import SearchBar from "../components/SearchBar";
+import AddItem from "./AddItem";
 
 // now replace the content https://imgur.com/a/GbM6sKT with the image ../assets/images/eat-sleep-code-repeat.jpg
 // now replace the content https://imgur.com/a/y7a2zwZ with the image ../assets/images/good-day-to-code.jpg
 
 
-// TODO 
-// 1. currently, the image can't shown properly, this problem may be caused by 
+// TODO
+// 1. currently, the image can't shown properly, this problem may be caused by
 // https://stackoverflow.com/questions/40489569/images-from-imgur-com-is-not-displaying-on-website
-// for the implementation for the backend, we will only give the url for the image. Which I think 
+// for the implementation for the backend, we will only give the url for the image. Which I think
 // will be the imgur url if expected.
 
 
@@ -35,32 +37,41 @@ const itemSchema = new Schema({
 export default function Home() {
     const [items, setItems] = useState([])
 
-    const SearchBarChange = (e) => {
-        var isMessageEmpty = e.target.value == ""
-        console.log('SearchBarChange : %s', ...items)
-        console.log('SearchBarChange : %s', isMessageEmpty.toString())
+    const searchBarChange = (e) => {
+        let str = e.target.value;
+        let isMessageEmpty = str === ""
 
-        
-        setItems(() => [...items, e.target.value])
+        if(!isMessageEmpty)
+        {
+            let keywords = str.split(',')
+            keywords = keywords.map((word) => word.trim()).filter(str => str)
+            // console.log("keywords = " + keywords)
+            // console.log("items = " + items)
+            getItemsFromBackend(keywords)
+            setItems(() => [e.target.value, ...items])  // add item to the front to prevent scrolling
+        }
+    }
+
+    const getItemsFromBackend = async (keywords) => {
+        await axios.post('http://127.0.0.1:4000/keywords', {
+            method: "post",
+            body: JSON.stringify(keywords),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            console.log(JSON.parse(res.config.data).body)
+        })
+        .catch(err => console.log(err))
+
     }
 
     return (
-        // <>
-        //     <h1>Homepage</h1>
-        //     <ul className="productBox">
-        //         <li>
-        //             <a href="/product/143" className="productLink"> <img className="productImage" src="https://imgur.com/a/GbM6sKT" alt="Eat, Sleep, Code, Repeat"/></a>
-        //             <br/><a href="/product/143" className="productLink">It's a good day to code</a>
-        //         </li>
-        //         <li>
-        //             <a href="/product/486" className="productLink"><img className="productImage" src={require('../assets/images/eat-sleep-code-repeat.jpg')} alt="Eat. Sleep. Code. Repeat."/></a>
-        //             <br /><a href="/product/486" className="productLink">Eat. Sleep. Code. Repeat.</a>
-        //         </li>
-        //     </ul>
-        // </>
 
         <div>
-            <SearchBar searchBarChangedCallback={SearchBarChange} />
+            <SearchBar searchBarChangedCallback={searchBarChange} />
+            <br/>
             <ItemBlock items={items}> </ItemBlock>
         </div>
     )

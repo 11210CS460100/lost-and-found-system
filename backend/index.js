@@ -26,7 +26,12 @@ const client = new MongoClient(process.env.DB_URI, {
     }
 });
 
-
+const dbOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    retryWrites: true,
+    w: 'majority'
+};
 
 app.use(cors(corsOptions))
 app.use('/', router)
@@ -36,15 +41,34 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        await client.db("final_project").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
         const port = process.env.PORT || 4000
         const server = app.listen(port, () => {
             console.log(`Server is running on port ${port}`)
         })
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
+        mongoose.connect(process.env.DB_URI, dbOptions)
+        .then( () =>  {
+            console.log("Connected");
+        })
+        .catch ((err) => {
+            console.log(`connect error: ${err.message}`);
+            if (mongoose.connection.readyState != 0) {
+                console.log(`mongoose.connect returned an error, but ready state is ${mongoose.connection.readyState}`);
+            }
+        });
+        process.on('SIGINT', async () => {
+            console.log(mongoose.connection.readyState);
+            await client.close();
+            await mongoose.connection.close();
+            server.close(() => {
+                console.log('Server and MongoDB connection closed');
+                process.exit(0);
+            });
+        });
+    } catch(error) {
+        console.error("Error running the application", error);
+        process.exit(1);
     }
 }
 run().catch(console.dir);
