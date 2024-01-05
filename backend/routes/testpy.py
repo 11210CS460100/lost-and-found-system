@@ -32,5 +32,5 @@ score_3 = util.pytorch_cos_sim(embedding_0, embedding_3)
 print('python in running!')
 print(score)
 print(embedding[0].shape)
-sys.stdout.flush()
+sys.stdout.flush() # remeber to call this. or nothing will be passed to JS
     
