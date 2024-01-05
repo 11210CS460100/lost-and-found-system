@@ -11,3 +11,21 @@ response:
     }
 ]
 
+### add item
+方法: post 
+使用網址: http://127.0.0.1:4000/addItem
+需要確定的是傳過來的body必須類似以下的樣子
+{
+    "description": "Black leather wallet",
+    "picture": "https://example.com/images/wallet.jpg",
+    "dateLost": "2024-01-03",
+    "locationFound": "Main Street Park",
+    "status": "Unclaimed",
+    "finder": {
+        "name": "Test Test",
+        "contact": "0912345678"
+    }
+}
+response: successfully insert or error code
+
+

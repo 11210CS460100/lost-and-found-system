@@ -52,7 +52,7 @@ router.get('/description/:a', async(req, res) => {
 // other api functions
 
 // insert table item
-router.post('/insert', asyncHandler(async (req, res) => {
+router.post('/addItem', asyncHandler(async (req, res) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(500).send('Database not connected');
     }
