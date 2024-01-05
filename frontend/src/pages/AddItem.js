@@ -87,7 +87,7 @@ export default function AddItem({ setShowAddItem }) {
             let imageName = link.split('/').at(-1)
             let imageID = imageName.split('.')[0]
             let url = "http://127.0.0.1:4000/description/" + imageID
-    
+
             await axios.get(url)
                     .then(data => setDescription([String(data.data[0].generated_text)]))
                     .catch(err => console.log(err))
@@ -99,7 +99,7 @@ export default function AddItem({ setShowAddItem }) {
         {
             console.log('Invalid image')
         }
-        
+
     }
 
     const changeDescription = (isAddOperation) => {
@@ -130,20 +130,20 @@ export default function AddItem({ setShowAddItem }) {
 
                     {/* Location Found */}
                     <div>
-                        <label className="locationFound-label" htmlFor="locationFound">Lost Found:</label>
+                        <label className="locationFound-label" htmlFor="locationFound">Lost Found: </label>
                         <input type="text" name="locationFound" {...register("locationFound")}/>
                     </div>
                     {/* Location Found */}
 
                     {/* Picture */}
                     <div>
-                        <label className="picture-label" htmlFor="picture">Picture:</label>
+                        <label className="picture-label" htmlFor="picture">Picture: </label>
                         <input type="file" name="picture" onChange={getdescription}/>
                         {
                             // descriptions
                             description.length > 0
                             ?   <div>
-                                    <label className="descrpition-label" htmlFor="description">Description:</label>
+                                    <label className="descrpition-label" htmlFor="description">Description: </label>
                                     <button className="add-descrption" type="button" onClick={() => changeDescription(true)} >add</button>
                                     <button className="remove-descrption" type="button" onClick={() => changeDescription(false)} >remove</button>
                                     {
@@ -168,9 +168,9 @@ export default function AddItem({ setShowAddItem }) {
                         {
                             isAnonymous == true ? null :
                             <div>
-                                <label className="Name-label" htmlFor="name">Name:</label>
+                                <label className="Name-label" htmlFor="name">Name: </label>
                                 <input type="text" name="name" {...register("finderName")}/>
-                                <label className="Contact-label" htmlFor="contact">Contact:</label>
+                                <label className="Contact-label" htmlFor="contact">&nbsp;Contact: </label>
                                 <input type="text" name="contact" {...register("contact")}/>
                             </div>
                         }
