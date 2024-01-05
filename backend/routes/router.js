@@ -3,6 +3,7 @@ const router = express.Router()
 // handle the timeout 
 const asyncHandler = require('express-async-handler');
 const schemas = require('../models/schemas')
+const { ObjectId } = require('mongodb')
 // directly install node-fetch will cause error, please install node-fetch@2
 // https://stackoverflow.com/questions/69087292/requirenode-fetch-gives-err-require-esm
 var fetch = require('node-fetch');
@@ -45,8 +46,29 @@ router.get('/description/:a', async(req, res) => {
     }
 	res.end();
 })
+
 // search 
 
+router.get('/finding/:q', async(req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(500).send('Database not connected');
+    }
+    const query = String(req.params.q)
+    //use the query to compare with all the other 
+    //description in the database to find the closest one
+/*--TODO: call python--*/
+    //get the return index or id?
+    //const allItems = mongoose.model('Items', itemSchema)
+
+    //not working finding a way to get item on cloud db, just get null
+    await schemas.Items.findOne({_id: new mongoose.Types.ObjectId('6596d4d1262a727684af5456')})//id string, now just for testing
+                .then(doc => {
+                    res.status(200).json(doc)
+                })
+                .catch(err => {
+                    res.status(500).json({error: 'Could not find the document'})
+                })
+})
 
 
 // other api functions
