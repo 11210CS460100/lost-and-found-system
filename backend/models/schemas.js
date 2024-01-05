@@ -15,9 +15,9 @@ const itemSchema = new Schema({
     locationFound: { type: String },
     status: { type: String, default: 'Unclaimed' }, // e.g., 'Claimed', 'Unclaimed'
     finder: finderSchema
-});
+}, { versionKey: false }); // set the version to be false
 
-const Items = mongoose.model('Items', itemSchema, 'items')
-const mySchemas = {'Items':Items}
+const Items = mongoose.model('Items', itemSchema)
+const mySchemas = {'Items':Items }
 
 module.exports = mySchemas

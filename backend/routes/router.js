@@ -1,9 +1,12 @@
 const express = require('express')
 const router = express.Router()
+// handle the timeout 
+const asyncHandler = require('express-async-handler');
 const schemas = require('../models/schemas')
 // directly install node-fetch will cause error, please install node-fetch@2
 // https://stackoverflow.com/questions/69087292/requirenode-fetch-gives-err-require-esm
 var fetch = require('node-fetch');
+const mongoose = require('mongoose');
 
 // GET all items
 
@@ -47,5 +50,38 @@ router.get('/description/:a', async(req, res) => {
 
 
 // other api functions
+
+// insert table item
+router.post('/insert', asyncHandler(async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(500).send('Database not connected');
+    }
+    // Example data to be saved
+    /*const itemData = {
+        description: "Black leather wallet",
+        picture: "https://example.com/images/wallet.jpg",
+        dateLost: new Date(),
+        locationFound: "Main Street Park",
+        status: "Unclaimed",
+        finder: {
+            "name": "Test Test",
+            "contact": "0912345678"
+        }
+    };*/
+    // example of body 
+
+    // Create an instance of the Items model
+    const item = new schemas.Items(req.body);
+
+    console.log(item)
+	try {
+		await item.save()
+        .then(res.send("successfully insert"))
+        .catch(error => console.error('Error saving item:', error));
+	} catch (error) {
+		res.status(500).send(error)
+	}
+    res.end();
+}));
 
 module.exports = router
