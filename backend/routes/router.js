@@ -1,4 +1,5 @@
 const express = require('express')
+const child_process = require('child_process')
 const router = express.Router()
 // handle the timeout 
 const asyncHandler = require('express-async-handler');
@@ -122,6 +123,23 @@ router.post('/addItem', asyncHandler(async (req, res) => {
 		res.status(500).send(error)
 	}
     res.end();
+}))
+
+router.get('/callpy', asyncHandler(async (req, res) => {
+	
+    console.log('func')
+
+    try {
+		let process = child_process.spawn('python', ["./routes/testpy.py"])
+        process.stdout.on('data', (data) => {
+            const text = data.toString('utf8')
+            console.log(text)
+            res.status(201).json({a: text})
+        })
+	} catch (error) {
+		res.status(500).send(error)
+	}
+   
 }))
 
 module.exports = router
