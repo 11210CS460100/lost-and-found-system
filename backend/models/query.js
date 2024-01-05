@@ -42,4 +42,5 @@ query("cats.jpg").then((response) => {
 	console.log(JSON.stringify(response));
 });
 
-// TODO: give the user a way to upload an image and then run the query on that image
+
+// Above example for huggingface API, please complete them in router.js
