@@ -7,42 +7,35 @@ param1 = sys.argv[1]
 param2 = sys.argv[2]
 param3 = sys.argv[3]
 
-sentences = ["I'm happy", "I'm full of happiness","I like that happy dog!", "I'm a dog"] 
-
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-embedding = []
+
+delimiters = [",", "[", "]"]
+ 
+for delimiter in delimiters:
+    param1 = " ".join(param1.split(delimiter))
+ 
+param1_list = param1.split()
+ 
+#print(param1_list)
+
+
 #Compute embedding for all sentence, to build up a dictionary for further search
 #in our application, we can embed the sentence as the document been uploaded
 vector = (model.encode(param3, convert_to_tensor=True))
-''' 
-for i in range(len(sentences)):
-    embedding.append(model.encode(sentences[i], convert_to_tensor=True))
-   
-embedding_0= model.encode(sentences[0], convert_to_tensor=True)
-embedding_1 = model.encode(sentences[1], convert_to_tensor=True)
-embedding_2 = model.encode(sentences[2], convert_to_tensor=True)
-embedding_3 = model.encode(sentences[3], convert_to_tensor=True)
-'''
-score = []
+
+highest_score = 0
+index = 0
 #compare the wanted query with all the other embedding in the dictionary
-for i in range(len(embedding)-1):
-    score.append(util.pytorch_cos_sim(embedding[0], embedding[i+1]))
 '''
-score_1 = util.pytorch_cos_sim(embedding_0, embedding_1)
-score_2 = util.pytorch_cos_sim(embedding_0, embedding_2)
-score_3 = util.pytorch_cos_sim(embedding_0, embedding_3)
+for i in range(len(param1_list)):
+    score = (util.pytorch_cos_sim(vector, param1_list[i+1]))
+    if score > highest_score:
+        index = i
+        highest_score = score
 '''
 
-#print('python in running!')
-#print(score)
-#print(embedding[0].shape)
-#print(param1)
-#param1 = param1.split(",")
-#print(param1[0])
-#param2 = param2.split(",")
-#print(param2[0])
-print(json.dumps(vector.tolist())) #convert tensor -> list -> json string
-#print( 'param2: ' + str(param2))
+param2 = param2.split(",")
+print(param2[index]) #convert tensor -> list -> json string
 sys.stdout.flush() # remeber to call this. or nothing will be passed to JS
     
