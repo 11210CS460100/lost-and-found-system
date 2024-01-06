@@ -150,30 +150,49 @@ router.post('/addItem', asyncHandler(async (req, res) => {
     }
     // Example data to be saved
     /*const itemData = {
-        description: "Black leather wallet",
-        picture: "https://example.com/images/wallet.jpg",
-        dateLost: new Date(),
-        locationFound: "Main Street Park",
-        status: "Unclaimed",
-        finder: {
+        "description": "Black leather wallet",
+        "picture": "https://example.com/images/wallet.jpg",
+        "dateLost": new Date(),
+        "locationFound": "Main Street Park",
+        "status": "Unclaimed",
+        "finder": {
             "name": "Test Test",
             "contact": "0912345678"
-        }
+        },
+        "vector": [].shape() =384
     };*/
     // example of body 
 
+    //generate vector for item
+    console.log(req.body)
+    let obj = JSON.parse(JSON.stringify(req.body))
+    console.log('hi there')
+    let param = obj.description
+    console.log('hi there')
+    var vector
+    try {
+        let process = child_process.spawn('python', ["./routes/postpy.py", param]) //create a child process
+        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
+            const text = data.toString('utf8')
+            vector = JSON.parse(text) //python return JSON string, parse it!
+            console.log(vector)
+        })
+    } catch (error) {
+        console.log(error)
+    }
     // Create an instance of the Items model
-    const item = new schemas.Items(JSON.parse(req.body.body));
-
+    obj.vector = vector /************* not correct this is still empty ************ */
+    const item = new schemas.Items(obj)
     console.log(item)
-	try {
-		await item.save()
+    try {
+        await item.save()
         .then(res.send("successfully insert"))
         .catch(error => console.error('Error saving item:', error));
-	} catch (error) {
-		res.status(500).send(error)
-	}
+    } catch (error) {
+        res.status(500).send(error)
+    }
     res.end();
+    
 }))
 
 router.get('/callpy', asyncHandler(async (req, res) => {
