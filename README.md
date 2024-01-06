@@ -30,7 +30,9 @@ npm start
 ```
 
 In backend, since we use python child_process, mind that python module **sentence_transformers** is required.
+
 Please use **python 3.9**, other version may have problem.
+
 For sentence_transformers installation, refer to https://www.sbert.net/#installation
 
 ## after work
