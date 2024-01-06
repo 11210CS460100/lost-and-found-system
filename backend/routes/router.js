@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const child_process = require('child_process')
 // handle the timeout 
 const asyncHandler = require('express-async-handler');
 const schemas = require('../models/schemas')
@@ -57,14 +58,36 @@ router.get('/finding/:q', async(req, res) => {
     let allItems = await schemas.Items.find({},{description: 1})
     
     // the way to extract value from json document
+    let desArray = []
+    let idArray = []
     for (var i =0; i< allItems.length ;i++) {
-        console.log(allItems[i].description);
+        desArray.push(allItems[i].description);
+        idArray.push(allItems[i]._id)
     }
     //description in the database to find the closest one
 /*--TODO: call python--*/
+    console.log(desArray)
+    console.log(idArray)
+    console.log('func')
+
+    try {
+        let param1 = desArray
+        let param2 = idArray
+        let param3 = query
+        let process = child_process.spawn('python', ["./routes/testpy.py", param1, param2, param3]) //create a child process
+        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
+            const text = data.toString('utf8')
+            console.log(text)
+            res.status(201).json({a: text}) //response to client
+        })
+    } catch (error) {
+        //console.log('error')
+        res.status(500).send(error)
+    }
     //get the return index or id?
 
     //let item = await schemas.Items.findById("6597a9a589cf0b7926862d09")    
+    /*
     await schemas.Items.findOne({_id: new mongoose.Types.ObjectId("6597a9a589cf0b7926862d09")},
                                                         {description: 1, picture:1})   
                 .then(doc => {
@@ -72,7 +95,7 @@ router.get('/finding/:q', async(req, res) => {
                 })
                 .catch(err => {
                     res.status(500).json({error: 'Could not find the document'})
-                })
+                })*/
 })
 
 
