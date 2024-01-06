@@ -170,7 +170,7 @@ export default function AddItem({ setShowAddItem }) {
                             <div>
                                 <label className="Name-label" htmlFor="name">Name: </label>
                                 <input type="text" name="name" {...register("finderName")}/>
-                                <label className="Contact-label" htmlFor="contact">&nbsp;Contact: </label>
+                                <label className="Contact-label" htmlFor="contact"> Contact Info: </label>
                                 <input type="text" name="contact" {...register("contact")}/>
                             </div>
                         }
