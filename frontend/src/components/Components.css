@@ -19,7 +19,7 @@
 }
 
 .item{
-    background-color: rgb(160, 220, 224);
+    background-color: #d7d7d7;/*#a0dce0;*/
     padding: 5px;
     margin: 5px;
     border-radius: 20px;
@@ -27,16 +27,18 @@
     animation-duration: 1.0s;
     max-width: 100%;
     word-wrap: break-word;
+    border: 3px solid black;
 }
 
 .item img{
-    /*display: block;
+    /*center*/
+    display: block;
     margin-left: auto;
-    margin-right: auto;*/
+    margin-right: auto;
 
-    max-width: 100px;
-    max-height: 100px;
-    padding: 4px
+    max-width: 200px;
+    max-height: 200px;
+    /*padding: 4px*/
 }
 /* item */
 
