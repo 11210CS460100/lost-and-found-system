@@ -54,11 +54,19 @@ router.get('/finding/:q', async(req, res) => {
     }
     const query = String(req.params.q)
     //use the query to compare with all the other 
+    let allItems = await schemas.Items.find({},{description: 1})
+    
+    // the way to extract value from json document
+    for (var i =0; i< allItems.length ;i++) {
+        console.log(allItems[i].description);
+    }
     //description in the database to find the closest one
 /*--TODO: call python--*/
     //get the return index or id?
 
-    let item = await schemas.Items.findById("6597a9a589cf0b7926862d09")     
+    //let item = await schemas.Items.findById("6597a9a589cf0b7926862d09")    
+    await schemas.Items.findOne({_id: new mongoose.Types.ObjectId("6597a9a589cf0b7926862d09")},
+                                                        {description: 1, picture:1})   
                 .then(doc => {
                     res.status(200).json(doc)
                 })
