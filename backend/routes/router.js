@@ -130,7 +130,9 @@ router.get('/callpy', asyncHandler(async (req, res) => {
     console.log('func')
 
     try {
-		let process = child_process.spawn('python', ["./routes/testpy.py"]) //create a child process
+        let param1 = req.query.param1
+        let param2 = req.query.param2
+		let process = child_process.spawn('python', ["./routes/testpy.py", param1, param2]) //create a child process
         process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
             const text = data.toString('utf8')
             console.log(text)

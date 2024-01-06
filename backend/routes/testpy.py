@@ -2,7 +2,8 @@ from sentence_transformers import SentenceTransformer, util
 import sys
 
 
-
+param1 = sys.argv[1]
+param2 = sys.argv[2]
 
 sentences = ["I'm happy", "I'm full of happiness","I like that happy dog!", "I'm a dog"] 
 
@@ -32,5 +33,6 @@ score_3 = util.pytorch_cos_sim(embedding_0, embedding_3)
 print('python in running!')
 print(score)
 print(embedding[0].shape)
+print('param1: ' + str(param1) + 'param2: ' + str(param2))
 sys.stdout.flush() # remeber to call this. or nothing will be passed to JS
     
