@@ -23,12 +23,12 @@ embedding_0= model.encode(sentences[0], convert_to_tensor=True)
 embedding_1 = model.encode(sentences[1], convert_to_tensor=True)
 embedding_2 = model.encode(sentences[2], convert_to_tensor=True)
 embedding_3 = model.encode(sentences[3], convert_to_tensor=True)
-''''''
+'''
 score = []
 #compare the wanted query with all the other embedding in the dictionary
 for i in range(len(embedding)-1):
     score.append(util.pytorch_cos_sim(embedding[0], embedding[i+1]))
-
+'''
 score_1 = util.pytorch_cos_sim(embedding_0, embedding_1)
 score_2 = util.pytorch_cos_sim(embedding_0, embedding_2)
 score_3 = util.pytorch_cos_sim(embedding_0, embedding_3)
