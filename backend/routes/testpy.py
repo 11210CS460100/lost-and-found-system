@@ -1,5 +1,6 @@
 from sentence_transformers import SentenceTransformer, util
 import sys
+import json
 
 
 param1 = sys.argv[1]
@@ -33,15 +34,15 @@ score_2 = util.pytorch_cos_sim(embedding_0, embedding_2)
 score_3 = util.pytorch_cos_sim(embedding_0, embedding_3)
 '''
 
-print('python in running!')
+#print('python in running!')
 #print(score)
 #print(embedding[0].shape)
-print(param1)
-param1 = param1.split(",")
-print(param1[0])
-param2 = param2.split(",")
-print(param2[0])
-print(vector)
+#print(param1)
+#param1 = param1.split(",")
+#print(param1[0])
+#param2 = param2.split(",")
+#print(param2[0])
+print(json.dumps(vector.tolist())) #convert tensor -> list -> json string
 #print( 'param2: ' + str(param2))
 sys.stdout.flush() # remeber to call this. or nothing will be passed to JS
     

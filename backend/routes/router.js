@@ -8,6 +8,7 @@ const schemas = require('../models/schemas')
 // https://stackoverflow.com/questions/69087292/requirenode-fetch-gives-err-require-esm
 var fetch = require('node-fetch');
 const mongoose = require('mongoose');
+const { json } = require('body-parser');
 
 // GET all items
 
@@ -77,8 +78,9 @@ router.get('/finding/:q', async(req, res) => {
         let process = child_process.spawn('python', ["./routes/testpy.py", param1, param2, param3]) //create a child process
         process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
             const text = data.toString('utf8')
-            console.log(text)
-            res.status(201).json({a: text}) //response to client
+            const vector = JSON.parse(text) //python return JSON string, parse it!
+            //console.log(vector)
+            res.status(201).json({a: vector}) //response to client
         })
     } catch (error) {
         //console.log('error')
