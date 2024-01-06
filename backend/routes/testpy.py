@@ -16,7 +16,8 @@ for delimiter in delimiters:
     param1 = " ".join(param1.split(delimiter))
  
 param1_list = param1.split()
- 
+for i in range(len(param1_list)):
+    param1_list[i] = float(param1_list[i])
 #print(param1_list)
 
 
