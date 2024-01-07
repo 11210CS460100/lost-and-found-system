@@ -48,9 +48,41 @@ export default function Home() {
             // console.log("keywords = " + keywords)
             // console.log("items = " + items)
             getItemsFromBackend(keywords)
-            setItems(() => [e.target.value, ...items])  // add item to the front to prevent scrolling
+            // setItems(() => [e.target.value, ...items])  // add item to the front to prevent scrolling
         }
     }
+
+    const [isWaiting, setIsWaiting] = useState(false)
+    const waitTest = async () => {
+        let isDone = false
+
+        await axios.get('http://127.0.0.1:4000/keywordsResult')
+        .then(res => {
+            console.log(res.data)
+            isDone = res.data === ""
+        })
+
+        return isDone
+    }
+
+    useEffect((e) =>{
+        const f = async () => {
+            
+            if(isWaiting)
+            {
+                console.log("prev")
+
+                let isDone = false
+                while(!isDone)
+                {
+                    isDone = await waitTest()
+                }
+                setIsWaiting(false)
+                console.log("after")
+            }
+        }
+        f()
+    }, [isWaiting])
 
     const getItemsFromBackend = async (keywords) => {
         await axios.post('http://127.0.0.1:4000/keywords', {
@@ -61,11 +93,16 @@ export default function Home() {
             }
         })
         .then(res => {
-            console.log(JSON.parse(res.config.data).body)
+            let filteredItems = res.data
+            console.log(res)
+            setIsWaiting(true)
+            // setItems(filteredItems)
         })
         .catch(err => console.log(err))
 
     }
+
+
 
     return (
 

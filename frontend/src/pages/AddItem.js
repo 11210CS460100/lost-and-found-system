@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Description from "../components/Description";
+
 export default function AddItem({ setShowAddItem }) {
     const [canSubmit, setCanSubmit] = useState(false)
     const [date, setdate] = useState(new Date())
@@ -43,6 +44,7 @@ export default function AddItem({ setShowAddItem }) {
             "dateLost" : lostDate,
             "locationFound" : locationFound,
             "description" : description,
+            "status": "Unclaimed",
 
             "finder" : {
                 "finderName" : finderName,
