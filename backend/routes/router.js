@@ -9,10 +9,39 @@ const schemas = require('../models/schemas')
 var fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const { json, text } = require('body-parser');
+const { start } = require('repl');
 
 // GET all items
+router.get('/view', async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(500).send('Database not connected');
+    }
+    const Items = schemas.Items; // Get the Items model
+    // usage http://127.0.0.1:4000/view?p=20&index=10
+    // will show 10 items from 200 to 210
+    const page = parseInt(req.query.p) || 0;
+    const itemsPerPage = parseInt(req.query.index) || 10; // Default to 10 if not provided
+    let startIndex = page * itemsPerPage;
 
+    try {
+        const totalItems = await Items.countDocuments();
 
+        if (startIndex >= totalItems) {
+            startIndex = Math.max(totalItems - itemsPerPage, 0);
+        }
+
+        const items = await Items.find()
+                                .sort({ dateLost: -1 }) // Sorting by dateLost in descending order
+                                .skip(startIndex)
+                                .limit(itemsPerPage)
+                                .select('-vector');
+
+        res.status(200).json(items);
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ error: 'Error fetching items from database', details: error.message });
+    }
+});
 
 // image and description handling
 async function query(imageUrl) {
