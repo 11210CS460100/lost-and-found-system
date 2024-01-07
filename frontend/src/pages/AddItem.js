@@ -135,9 +135,9 @@ export default function AddItem({ setShowAddItem }) {
         <div className="half-transparent-background" onClick={(e) => setShowAddItem(e, false)}>
             <div className="background" onClick={(e) => e.stopPropagation()}>
                 {
-                    isDone || isWaiting 
+                    isDone || isWaiting
                     ? <Loading cancelCallback={setShowAddItem} pending={isWaiting} info={isWaiting && !isDone ? "Uploading" : (isUploadingSuccess ? "Upload success" : "Upload fail")}/>
-                    : 
+                    :
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* Lost Date */}
                         <div>
@@ -149,7 +149,7 @@ export default function AddItem({ setShowAddItem }) {
                         {/* Location Found */}
                         <div>
                             <label className="locationFound-label" htmlFor="locationFound">Lost Found: </label>
-                            <input type="text" name="locationFound" {...register("locationFound")}/>
+                            <input type="text" name="locationFound"  placeholder='place' {...register("locationFound")}/>
                         </div>
                         {/* Location Found */}
 
@@ -192,7 +192,6 @@ export default function AddItem({ setShowAddItem }) {
                             }
                         </div>
                         {/* Finder */}
-
                         <div className="form-control">
                             <button type="submit" disabled={!canSubmit}>Add</button>
                         </div>
