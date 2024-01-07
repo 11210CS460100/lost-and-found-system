@@ -10,8 +10,9 @@ export default function AddItem({ setShowAddItem }) {
     const [canSubmit, setCanSubmit] = useState(false)
     const [date, setdate] = useState(new Date())
     const [imageLink, setImageLink] = useState("")
-    const [description, setDescription] = useState([])
+    const [description, setDescription] = useState("")
     const [isAnonymous, setIsAnonymouse] = useState(true)
+    const [isWaiting, setIsWaiting] = useState(false)
 
     const {
         register,
@@ -19,18 +20,16 @@ export default function AddItem({ setShowAddItem }) {
         formState: { errors }
     } = useForm();
 
-    const passDataToBackend = async (jsonData) => {
-        await axios.post('http://127.0.0.1:4000/addItem', {
-            method: "post",
-            body: JSON.stringify(jsonData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+    const passDataToBackend = async (packagedData) => {
+        setIsWaiting(true)
+
+        await axios.post('http://127.0.0.1:4000/addItem', packagedData)
         .then(res => {
             console.log(res)
         })
         .catch(err => console.log(err))
+
+        setIsWaiting(false)
     }
 
     const onSubmit = async (data) => {
@@ -39,7 +38,7 @@ export default function AddItem({ setShowAddItem }) {
         let finderName = isAnonymous ? "Anonymous" : data.finderName;
         let finderContact = isAnonymous ? "Empty" : data.contact;
 
-        let jsonData = {
+        let packagedData = {
             "picture" : imageLink,
             "dateLost" : lostDate,
             "locationFound" : locationFound,
@@ -52,9 +51,9 @@ export default function AddItem({ setShowAddItem }) {
             }
         }
 
-        console.log(jsonData);
+        console.log(packagedData);
 
-        await passDataToBackend(jsonData)
+        await passDataToBackend(packagedData)
     };
 
     const uploadPicture = async (image) =>{
@@ -74,13 +73,14 @@ export default function AddItem({ setShowAddItem }) {
         .then(data => data.json())
         .then(data => {
             returnLink = data.data.link
+            console.log(returnLink)
         })
         .catch(err => console.log(err))
 
         return returnLink
     }
 
-    const getdescription = async (e) => {
+    const getDescription = async (e) => {
         let image = e.target.files[0]
         let link = await uploadPicture(image)
 
@@ -91,7 +91,7 @@ export default function AddItem({ setShowAddItem }) {
             let url = "http://127.0.0.1:4000/description/" + imageID
 
             await axios.get(url)
-                    .then(data => setDescription([String(data.data[0].generated_text)]))
+                    .then(data => setDescription(String(data.data[0].generated_text)))
                     .catch(err => console.log(err))
 
             console.log(description)
@@ -104,6 +104,7 @@ export default function AddItem({ setShowAddItem }) {
 
     }
 
+    // deprecated
     const changeDescription = (isAddOperation) => {
         if(isAddOperation)
         {
@@ -118,6 +119,13 @@ export default function AddItem({ setShowAddItem }) {
             }
         }
     }
+
+    useEffect(() => {
+        if(isWaiting === false)
+        {
+            
+        }
+    }, [isWaiting])
 
     return (
         <div className="half-transparent-background" onClick={setShowAddItem.bind(this, false)}>
@@ -140,18 +148,16 @@ export default function AddItem({ setShowAddItem }) {
                     {/* Picture */}
                     <div>
                         <label className="picture-label" htmlFor="picture">Picture: </label>
-                        <input type="file" name="picture" onChange={getdescription}/>
+                        <input type="file" name="picture" onChange={getDescription}/>
                         {
                             // descriptions
-                            description.length > 0
-                            ?   <div>
+                            imageLink !== ""
+                            ?   <p>
                                     <label className="descrpition-label" htmlFor="description">Description: </label>
-                                    <button className="add-descrption" type="button" onClick={() => changeDescription(true)} >add</button>
-                                    <button className="remove-descrption" type="button" onClick={() => changeDescription(false)} >remove</button>
-                                    {
-                                        description.map((str, idx) => <Description key={idx} description={str} setFunction={setDescription} idx={idx}/>)
-                                    }
-                                </div>
+                                    {/* <button className="add-descrption" type="button" onClick={() => changeDescription(true)} >add</button>
+                                    <button className="remove-descrption" type="button" onClick={() => changeDescription(false)} >remove</button> */}
+                                    <Description description={description} setFunction={setDescription}/>
+                                </p>
                             : null
                         }
                     </div>

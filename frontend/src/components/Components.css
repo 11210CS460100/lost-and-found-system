@@ -71,6 +71,9 @@
 .background input{
     border-radius: 5px;
 }
+.child-description{
+    width: 100%;
+}
 /* add item */
 
 /* Loading */

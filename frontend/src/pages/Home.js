@@ -72,6 +72,7 @@ export default function Home() {
         })
         .then(res => {
             let filteredItems = res.data
+            console.log(filteredItems)
             setItems(filteredItems)
         })
         .catch(err => console.log(err))
