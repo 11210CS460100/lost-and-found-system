@@ -85,30 +85,13 @@ router.post('/finding/description', async(req, res) => {
     }
     const query = String(req.body)
     console.log(query)
-    //use the query to compare with all the other 
-    let allItems = await schemas.Items.find({},{vector: 1})
-    
-    // the way to extract value from json document
-    let vecArray = []
-    let idArray = []
-    for (var i =0; i< allItems.length ;i++) {
-        vecArray.push(allItems[i].vector);
-        idArray.push(allItems[i]._id)
-    }
-    //description in the database to find the closest one
-    console.log(vecArray)
-    console.log(idArray)
-    console.log('func')
-    var text
     var query_vector
     try {
-        let param1 = JSON.stringify(vecArray) //[3,5,-1.1]
-        let param2 = idArray
-        let param3 = query
+        let param = query
 
         console.log(query)
         //await findpy(param1,param2,param3).then((result)=>{text = result})
-        await postpy(param3).then(result => {query_vector = result})
+        await postpy(param).then(result => {query_vector = result})
         console.log(query_vector)
         await schemas.Items.aggregate([
             {
@@ -135,29 +118,9 @@ router.post('/finding/description', async(req, res) => {
             res.status(500).json({error: 'Could not find the document',err})
             console.log(err)
         })
-        /*const texts = text.split(' ')
-        console.log(texts)
-        texts[1] = texts[1].replace(/[\r\n]/gm, '');
-        await schemas.Items.find({
-            '_id': { $in: [
-                new mongoose.Types.ObjectId(texts[0]),
-                new mongoose.Types.ObjectId(texts[1])
-            ]}
-        },{description: 1, picture:1})   
-        
-            .then(doc => {
-                res.status(200).json(doc)
-            })
-            .catch(err => {
-                res.status(500).json({error: 'Could not find the document',err})
-            })*/
     } catch (error) {
         console.log(error)
-    }
-    //get the return id
-    //let item = await schemas.Items.findById(text)    
-    
-    
+    }   
 })
 
 
