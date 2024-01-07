@@ -3,7 +3,7 @@ import axios from "axios";
 
 import ItemBlock from "../components/ItemBlock";
 import SearchBar from "../components/SearchBar";
-import Searching from "../components/Searching";
+import Loading from "../components/Loading";
 
 // now replace the content https://imgur.com/a/GbM6sKT with the image ../assets/images/eat-sleep-code-repeat.jpg
 // now replace the content https://imgur.com/a/y7a2zwZ with the image ../assets/images/good-day-to-code.jpg
@@ -88,7 +88,7 @@ export default function Home() {
         <div>
             {
                 isWaiting 
-                ? <Searching cancelCallback={cancelFetchingItems} />
+                ? <Loading cancelCallback={cancelFetchingItems} pending={true} info="Searching..."/>
                 : null
             }
             <SearchBar searchBarSubmitCallback={searchBarSubmit} />

@@ -11,11 +11,20 @@ import AddItem from '../pages/AddItem'
 export default function Router() {
     const [showAddItem, setShowAddItem] = useState(false)
 
+    const controlShowAddItem = (e, toShow) => {
+        if(e !== null)
+        {
+            console.log(e)
+            e.preventDefault()
+        }
+
+        setShowAddItem(toShow)
+    }
 
     return (
         <>
-            {showAddItem && <AddItem setShowAddItem={setShowAddItem}></AddItem>}
-            <Header setShowAddItem={setShowAddItem}/>
+            {showAddItem && <AddItem setShowAddItem={controlShowAddItem}></AddItem>}
+            <Header setShowAddItem={controlShowAddItem}/>
             <div className="content"><Home /></div>
         </>
     )

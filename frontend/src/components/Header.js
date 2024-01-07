@@ -7,7 +7,7 @@ export default function Header({ setShowAddItem }) {
         <p><a href="/"><img src={logo} alt="logo" height="50" /></a></p>
         <ul>
             <li><a href="/">Home</a></li>
-            <li><div onClick={() => setShowAddItem(true)}>Add Item</div></li>
+            <li><div onClick={(e) => setShowAddItem(e, true)}>Add Item</div></li>
         </ul>
         </nav>
     )

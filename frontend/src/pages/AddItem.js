@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Description from "../components/Description";
+import Loading from "../components/Loading";
 
 export default function AddItem({ setShowAddItem }) {
     const [canSubmit, setCanSubmit] = useState(false)
@@ -13,6 +14,8 @@ export default function AddItem({ setShowAddItem }) {
     const [description, setDescription] = useState("")
     const [isAnonymous, setIsAnonymouse] = useState(true)
     const [isWaiting, setIsWaiting] = useState(false)
+    const [isDone, setIsDone] = useState(false)
+    const [isUploadingSuccess, setIsUploadingSuccess] = useState(false)
 
     const {
         register,
@@ -22,12 +25,19 @@ export default function AddItem({ setShowAddItem }) {
 
     const passDataToBackend = async (packagedData) => {
         setIsWaiting(true)
+        setIsUploadingSuccess(false)
 
         await axios.post('http://127.0.0.1:4000/addItem', packagedData)
         .then(res => {
             console.log(res)
+            setIsUploadingSuccess(true)
+            setIsDone(true)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err)
+            setIsUploadingSuccess(false)
+            setIsDone(true)
+        })
 
         setIsWaiting(false)
     }
@@ -120,75 +130,80 @@ export default function AddItem({ setShowAddItem }) {
         }
     }
 
-    useEffect(() => {
-        if(isWaiting === false)
-        {
-            
-        }
-    }, [isWaiting])
+    // useEffect(() => {
+    //     if(isWaiting === false && imageLink !== "")
+    //     {
+    //         setShowAddItem(null, false)
+    //     }
+    // }, [isWaiting])
 
     return (
-        <div className="half-transparent-background" onClick={setShowAddItem.bind(this, false)}>
+        <div className="half-transparent-background" onClick={(e) => setShowAddItem(e, false)}>
             <div className="background" onClick={(e) => e.stopPropagation()}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    {/* Lost Date */}
-                    <div>
-                        <label className="lostDate-label" htmlFor="lostDate">Lost Date:</label>
-                        <DatePicker showIcon selected={date} onChange={setdate}/>
-                    </div>
-                    {/* Lost Date */}
+                {
+                    isDone || isWaiting 
+                    ? <Loading cancelCallback={setShowAddItem} pending={isWaiting} info={isWaiting && !isDone ? "Uploading" : (isUploadingSuccess ? "Upload success" : "Upload fail")}/>
+                    : 
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        {/* Lost Date */}
+                        <div>
+                            <label className="lostDate-label" htmlFor="lostDate">Lost Date:</label>
+                            <DatePicker showIcon selected={date} onChange={setdate}/>
+                        </div>
+                        {/* Lost Date */}
 
-                    {/* Location Found */}
-                    <div>
-                        <label className="locationFound-label" htmlFor="locationFound">Lost Found: </label>
-                        <input type="text" name="locationFound" {...register("locationFound")}/>
-                    </div>
-                    {/* Location Found */}
+                        {/* Location Found */}
+                        <div>
+                            <label className="locationFound-label" htmlFor="locationFound">Lost Found: </label>
+                            <input type="text" name="locationFound" {...register("locationFound")}/>
+                        </div>
+                        {/* Location Found */}
 
-                    {/* Picture */}
-                    <div>
-                        <label className="picture-label" htmlFor="picture">Picture: </label>
-                        <input type="file" name="picture" onChange={getDescription}/>
-                        {
-                            // descriptions
-                            imageLink !== ""
-                            ?   <p>
-                                    <label className="descrpition-label" htmlFor="description">Description: </label>
-                                    {/* <button className="add-descrption" type="button" onClick={() => changeDescription(true)} >add</button>
-                                    <button className="remove-descrption" type="button" onClick={() => changeDescription(false)} >remove</button> */}
-                                    <Description description={description} setFunction={setDescription}/>
-                                </p>
-                            : null
-                        }
-                    </div>
-                    {/* Picture */}
+                        {/* Picture */}
+                        <div>
+                            <label className="picture-label" htmlFor="picture">Picture: </label>
+                            <input type="file" name="picture" onChange={getDescription}/>
+                            {
+                                // descriptions
+                                imageLink !== ""
+                                ?   <p>
+                                        <label className="descrpition-label" htmlFor="description">Description: </label>
+                                        {/* <button className="add-descrption" type="button" onClick={() => changeDescription(true)} >add</button>
+                                        <button className="remove-descrption" type="button" onClick={() => changeDescription(false)} >remove</button> */}
+                                        <Description description={description} setFunction={setDescription}/>
+                                    </p>
+                                : null
+                            }
+                        </div>
+                        {/* Picture */}
 
-                    {/* Finder */}
-                    <div>
-                        <label className="finder-label" htmlFor="finder">Finder: </label>
-                        <input
-                            type="checkbox"
-                            name="finder"
-                            checked={isAnonymous}
-                            onChange={(e) => setIsAnonymouse(e.target.checked)}
-                            />
-                        <label className="Anonymous-label">Anonymous</label>
-                        {
-                            isAnonymous == true ? null :
-                            <div>
-                                <label className="Name-label" htmlFor="name">Name: </label>
-                                <input type="text" name="name" {...register("finderName")}/>
-                                <label className="Contact-label" htmlFor="contact"> Contact Info: </label>
-                                <input type="text" name="contact" {...register("contact")}/>
-                            </div>
-                        }
-                    </div>
-                    {/* Finder */}
+                        {/* Finder */}
+                        <div>
+                            <label className="finder-label" htmlFor="finder">Finder: </label>
+                            <input
+                                type="checkbox"
+                                name="finder"
+                                checked={isAnonymous}
+                                onChange={(e) => setIsAnonymouse(e.target.checked)}
+                                />
+                            <label className="Anonymous-label">Anonymous</label>
+                            {
+                                isAnonymous == true ? null :
+                                <div>
+                                    <label className="Name-label" htmlFor="name">Name: </label>
+                                    <input type="text" name="name" {...register("finderName")}/>
+                                    <label className="Contact-label" htmlFor="contact"> Contact Info: </label>
+                                    <input type="text" name="contact" {...register("contact")}/>
+                                </div>
+                            }
+                        </div>
+                        {/* Finder */}
 
-                    <div className="form-control">
-                        <button type="submit" disabled={!canSubmit}>Add</button>
-                    </div>
-                </form>
+                        <div className="form-control">
+                            <button type="submit" disabled={!canSubmit}>Add</button>
+                        </div>
+                    </form>
+                }
             </div>
         </div>
     )
