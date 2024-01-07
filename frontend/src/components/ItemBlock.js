@@ -7,7 +7,7 @@ export default function ItemBlock({ items }) {
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {
             items.map((item, idx) => {
-                return <Item key={idx} description={item} picture={'test'} dateLost={'2024-01-01'} locationFound={'garbage can'} status={'Unclaimed'} finderName={'me'}/>
+                return <Item key={idx} description={item.description} picture={item.picture} dateLost={item.dateLost} locationFound={item.locationFound} status={item.status} finder={item.finder}/>
             })
         }
         </div>
