@@ -74,7 +74,10 @@ router.get('/finding/:q', async(req, res) => {
         let param1 = JSON.stringify([3,5,-1.1]) //vecArray
         let param2 = idArray
         let param3 = query
+
+        console.log(query)
         await findpy(param1,param2,param3).then((result)=>{text = result})
+        console.log(text)
         await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(text)},{description: 1, picture:1})   
             .then(doc => {
                 res.status(200).json(doc)
@@ -209,11 +212,17 @@ function postpy(param){ //Promise python wrapper
 
 function findpy(param1, param2, param3){ //Promise python wrapper
     let process = child_process.spawn('python', ["./routes/findpy.py", param1, param2, param3]) //create a child process
-    return new Promise((resolve)=>{
-        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
-            const text = data.toString('utf8')
-            resolve(text)
-        })
+    console.log('child process spawned')
+    return new Promise((resolve, reject)=>{
+        try{
+            process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
+                const text = data.toString('utf8') //TODO: what is the return val. of findpy?
+                resolve(text)
+            })
+        }catch(err){
+            console.log(err)
+            reject(err)
+        }
     })
    
 }
