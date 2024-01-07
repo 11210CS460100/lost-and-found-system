@@ -78,15 +78,17 @@ router.get('/finding/:q', async(req, res) => {
         console.log(query)
         await findpy(param1,param2,param3).then((result)=>{text = result})
         console.log(text)
-        await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(text)},{description: 1, picture:1})   
+        const withoutLineBreaks = text.replace(/[\r\n]/gm, '');
+        await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(withoutLineBreaks)},{description: 1, picture:1})   
+        //await schemas.Items.findById(withoutLineBreaks) //for all data
             .then(doc => {
                 res.status(200).json(doc)
             })
             .catch(err => {
-                res.status(500).json({error: 'Could not find the document'})
+                res.status(500).json({error: 'Could not find the document',err})
             })
     } catch (error) {
-        console.log('error')
+        console.log(error)
         //res.status(500).send(error)
     }
     //get the return id
