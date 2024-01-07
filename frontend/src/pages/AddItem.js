@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState,  } from "react"
 import axios from "axios"
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
@@ -130,12 +130,6 @@ export default function AddItem({ setShowAddItem }) {
         }
     }
 
-    // useEffect(() => {
-    //     if(isWaiting === false && imageLink !== "")
-    //     {
-    //         setShowAddItem(null, false)
-    //     }
-    // }, [isWaiting])
 
     return (
         <div className="half-transparent-background" onClick={(e) => setShowAddItem(e, false)}>
@@ -188,7 +182,7 @@ export default function AddItem({ setShowAddItem }) {
                                 />
                             <label className="Anonymous-label">Anonymous</label>
                             {
-                                isAnonymous == true ? null :
+                                isAnonymous === true ? null :
                                 <div>
                                     <label className="Name-label" htmlFor="name">Name: </label>
                                     <input type="text" name="name" {...register("finderName")}/>
