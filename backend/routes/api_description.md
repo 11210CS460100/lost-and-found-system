@@ -60,7 +60,73 @@ response: successfully delete or error code
 方法: post 
 使用網址: http://127.0.0.1:4000/finding/description
 body: 為一段任意字串
-response: top two document(目前只取description&picture)
+response: top five document 除了vector以外的東西都會被回傳回來
+[
+    {
+        "_id": "659a119d892f996a1c3e6f6d",
+        "description": [
+            "Mikufuwa"
+        ],
+        "picture": "https://example.com/images/wallet.jpg",
+        "dateLost": "2024-01-07T02:51:06.496Z",
+        "locationFound": "Main Street Park",
+        "status": "Unclaimed",
+        "finder": {
+            "name": "Test Test",
+            "contact": "0912345678",
+            "_id": "659a119d892f996a1c3e6f6e"
+        },
+        "score": 0.5783886313438416
+    },
+    {
+        "_id": "659a15fc6fee8bd25e3110de",
+        "description": [
+            "Mikufuwa"
+        ],
+        "picture": "https://example.com/images/wallet.jpg",
+        "dateLost": "2024-01-07T03:09:45.784Z",
+        "locationFound": "Main Street Park",
+        "status": "Unclaimed",
+        "finder": {
+            "name": "Test Test",
+            "contact": "0912345678",
+            "_id": "659a15fc6fee8bd25e3110df"
+        },
+        "score": 0.5783886313438416
+    },
+    {
+        "_id": "659a112c453c7a2d9ae2b67d",
+        "description": [
+            "Black leather wallet"
+        ],
+        "picture": "https://example.com/images/wallet.jpg",
+        "dateLost": "2024-01-07T02:49:13.516Z",
+        "locationFound": "Main Street Park",
+        "status": "Unclaimed",
+        "finder": {
+            "name": "Test Test",
+            "contact": "0912345678",
+            "_id": "659a112c453c7a2d9ae2b67e"
+        },
+        "score": 0.5433688759803772
+    },
+    {
+        "_id": "659a4c15b227fc7744a075ad",
+        "description": [
+            "Black leather wallet"
+        ],
+        "picture": "https://example.com/images/wallet.jpg",
+        "dateLost": "2024-01-07T02:49:13.516Z",
+        "locationFound": "Main Street Park",
+        "status": "Unclaimed",
+        "finder": {
+            "name": "Test Test",
+            "contact": "0912345678",
+            "_id": "659a112c453c7a2d9ae2b67e"
+        },
+        "score": 0.5433688759803772
+    }
+]
 
 ### view
 方法: get
