@@ -56,7 +56,7 @@ router.get('/finding/:q', async(req, res) => {
     }
     const query = String(req.params.q)
     //use the query to compare with all the other 
-    let allItems = await schemas.Items.find({},{description: 1})
+    let allItems = await schemas.Items.find({},{vector: 1})
     
     // the way to extract value from json document
     let vecArray = []
@@ -66,18 +66,19 @@ router.get('/finding/:q', async(req, res) => {
         idArray.push(allItems[i]._id)
     }
     //description in the database to find the closest one
-    console.log(vecArray)
+    //console.log(vecArray)
     console.log(idArray)
     console.log('func')
     var text
     try {
-        let param1 = JSON.stringify([3,5,-1.1]) //vecArray
+        let param1 = JSON.stringify(vecArray) //[3,5,-1.1]
         let param2 = idArray
         let param3 = query
 
         console.log(query)
         await findpy(param1,param2,param3).then((result)=>{text = result})
         console.log(text)
+        
         const withoutLineBreaks = text.replace(/[\r\n]/gm, '');
         await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(withoutLineBreaks)},{description: 1, picture:1})   
         //await schemas.Items.findById(withoutLineBreaks) //for all data
