@@ -71,15 +71,42 @@ router.post('/finding/description', async(req, res) => {
     console.log(idArray)
     console.log('func')
     var text
+    var query_vector
     try {
         let param1 = JSON.stringify(vecArray) //[3,5,-1.1]
         let param2 = idArray
         let param3 = query
 
         console.log(query)
-        await findpy(param1,param2,param3).then((result)=>{text = result})
-        console.log(text)
-        const texts = text.split(' ')
+        //await findpy(param1,param2,param3).then((result)=>{text = result})
+        await postpy(param3).then(result => {query_vector = result})
+        console.log(query_vector)
+        await schemas.Items.aggregate([
+            {
+                "$vectorSearch": {
+                    "index": "vector_index",
+                    "path": "vector",
+                    "queryVector": query_vector,
+                    "numCandidates": 5,
+                    "limit": 5
+                }
+            },
+            {
+                "$project": {
+                    "vector": 0,
+                    "score": { "$meta": "vectorSearchScore" }
+                }
+            }
+          ])
+          .then(doc => {
+            res.status(200).json(doc)
+        })
+        .catch(err => {
+            
+            res.status(500).json({error: 'Could not find the document',err})
+            console.log(err)
+        })
+        /*const texts = text.split(' ')
         console.log(texts)
         texts[1] = texts[1].replace(/[\r\n]/gm, '');
         await schemas.Items.find({
@@ -94,10 +121,9 @@ router.post('/finding/description', async(req, res) => {
             })
             .catch(err => {
                 res.status(500).json({error: 'Could not find the document',err})
-            })
+            })*/
     } catch (error) {
         console.log(error)
-        //res.status(500).send(error)
     }
     //get the return id
     //let item = await schemas.Items.findById(text)    
@@ -213,6 +239,7 @@ function postpy(param){ //Promise python wrapper
     let process = child_process.spawn('python', ["./routes/postpy.py", param]) //create a child process
     return new Promise((resolve)=>{
         process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
+            console.log(data)
             const text = data.toString('utf8')
             vector = JSON.parse(text) //python return JSON string, parse it!
             resolve(vector)
