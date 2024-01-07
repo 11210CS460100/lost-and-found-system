@@ -55,3 +55,9 @@ response: successfully insert or error code
 }
 則把她的old id裡面的字串複製下來
 response: successfully delete or error code
+
+### find items
+方法: post 
+使用網址: http://127.0.0.1:4000/finding/description
+body: 為一段任意字串
+response: top two document(目前只取description&picture)
