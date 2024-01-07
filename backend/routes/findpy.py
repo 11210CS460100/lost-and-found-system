@@ -43,19 +43,27 @@ for i in range(len(param1_list)):
 #in our application, we can embed the sentence as the document been uploaded
 vector = (model.encode(param3, convert_to_tensor=True))
 
-highest_score = 0
-index = 0
-#compare the wanted query with all the other embedding in the dictionary
-#print(vector)
-#print(len(vector_list))
+scores = [0, 0, 0, 0, 0]
+indexs = [0, 0, 0, 0, 0]
+score_1 = 0
+index_1 = 0
+score_2 = 0
+index_2 = 0
+#compare the wanted query with all the other embedding in the dictionar
 for i in range(len(vector_list)):
     score = (util.pytorch_cos_sim(vector, vector_list[i]))
-    if score > highest_score:
-        index = i
-        highest_score = score
+    if score >= score_1:
+        score_2 = score_1
+        index_2 = index_1
+        index_1 = i
+        score_1 = score
+    elif score >= score_2:
+        index_2 = i
+        score_2 = score
+        
 
 #print(highest_score)
 param2 = param2.split(",")
-print(param2[index]) #convert tensor -> list -> json string
+print(param2[index_1], param2[index_2]) #convert tensor -> list -> json string
 sys.stdout.flush() # remeber to call this. or nothing will be passed to JS
     

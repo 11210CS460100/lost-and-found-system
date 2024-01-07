@@ -50,11 +50,12 @@ router.get('/description/:a', async(req, res) => {
 
 // search 
 
-router.get('/finding/:q', async(req, res) => {
+router.post('/finding/description', async(req, res) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(500).send('Database not connected');
     }
-    const query = String(req.params.q)
+    const query = String(req.body)
+    console.log(query)
     //use the query to compare with all the other 
     let allItems = await schemas.Items.find({},{vector: 1})
     
@@ -66,7 +67,7 @@ router.get('/finding/:q', async(req, res) => {
         idArray.push(allItems[i]._id)
     }
     //description in the database to find the closest one
-    //console.log(vecArray)
+    console.log(vecArray)
     console.log(idArray)
     console.log('func')
     var text
@@ -78,10 +79,16 @@ router.get('/finding/:q', async(req, res) => {
         console.log(query)
         await findpy(param1,param2,param3).then((result)=>{text = result})
         console.log(text)
+        const texts = text.split(' ')
+        console.log(texts)
+        texts[1] = texts[1].replace(/[\r\n]/gm, '');
+        await schemas.Items.find({
+            '_id': { $in: [
+                new mongoose.Types.ObjectId(texts[0]),
+                new mongoose.Types.ObjectId(texts[1])
+            ]}
+        },{description: 1, picture:1})   
         
-        const withoutLineBreaks = text.replace(/[\r\n]/gm, '');
-        await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(withoutLineBreaks)},{description: 1, picture:1})   
-        //await schemas.Items.findById(withoutLineBreaks) //for all data
             .then(doc => {
                 res.status(200).json(doc)
             })
