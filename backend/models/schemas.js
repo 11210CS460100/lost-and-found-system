@@ -9,12 +9,13 @@ const finderSchema = new Schema({
 
 // Define the schema for items
 const itemSchema = new Schema({
-    description: { type: String, required: true },
+    description: { type: Array, required: true },
     picture: { type: String, required: true }, // the url for the image
     dateLost: { type: Date }, // This can be optional
     locationFound: { type: String },
     status: { type: String, default: 'Unclaimed' }, // e.g., 'Claimed', 'Unclaimed'
-    finder: finderSchema
+    finder: finderSchema,
+    vector: { type: Array, required: true }
 }, { versionKey: false }); // set the version to be false
 
 const Items = mongoose.model('Items', itemSchema)
