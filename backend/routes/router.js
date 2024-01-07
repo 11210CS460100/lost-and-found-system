@@ -8,7 +8,7 @@ const schemas = require('../models/schemas')
 // https://stackoverflow.com/questions/69087292/requirenode-fetch-gives-err-require-esm
 var fetch = require('node-fetch');
 const mongoose = require('mongoose');
-const { json } = require('body-parser');
+const { json, text } = require('body-parser');
 
 // GET all items
 
@@ -74,13 +74,14 @@ router.get('/finding/:q', async(req, res) => {
         let param1 = JSON.stringify([3,5,-1.1]) //vecArray
         let param2 = idArray
         let param3 = query
-        let process = child_process.spawn('python', ["./routes/testpy.py", param1, param2, param3]) //create a child process
-        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
-            text = data.toString('utf8')
-            console.log(text)
-            //console.log(vector)
-            //res.status(201).json({a: text}) //response to client
-        })
+        await findpy(param1,param2,param3).then((result)=>{text = result})
+        await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(text)},{description: 1, picture:1})   
+            .then(doc => {
+                res.status(200).json(doc)
+            })
+            .catch(err => {
+                res.status(500).json({error: 'Could not find the document'})
+            })
     } catch (error) {
         console.log('error')
         //res.status(500).send(error)
@@ -88,14 +89,7 @@ router.get('/finding/:q', async(req, res) => {
     //get the return id
     //let item = await schemas.Items.findById(text)    
     
-    await schemas.Items.findOne({_id: new mongoose.Types.ObjectId(text)},
-                                                        {description: 1, picture:1})   
-                .then(doc => {
-                    res.status(200).json(doc)
-                })
-                .catch(err => {
-                    res.status(500).json({error: 'Could not find the document'})
-                })
+    
 })
 
 
@@ -148,7 +142,7 @@ router.post('/addItem', asyncHandler(async (req, res) => {
     }
     // Example data to be saved
     /*const itemData = {
-        "description": "Black leather wallet",
+        "description": "Mikufuwa",
         "picture": "https://example.com/images/wallet.jpg",
         "dateLost": new Date(),
         "locationFound": "Main Street Park",
@@ -160,37 +154,27 @@ router.post('/addItem', asyncHandler(async (req, res) => {
         "vector": [].shape() =384
     };*/
     // example of body 
-
     //generate vector for item
-    console.log(req.body)
+    //console.log(req.body)
     let obj = JSON.parse(JSON.stringify(req.body))
-    console.log('hi there')
+    //let obj = JSON.parse(JSON.stringify(itemData))
+    //console.log('hi there')
     let param = obj.description
+    //let param = "aa"
     console.log('hi there')
-    var vector
     try {
-        let process = child_process.spawn('python', ["./routes/postpy.py", param]) //create a child process
-        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
-            const text = data.toString('utf8')
-            vector = JSON.parse(text) //python return JSON string, parse it!
-            console.log(vector)
-        })
-    } catch (error) {
-        console.log(error)
-    }
-    // Create an instance of the Items model
-    obj.vector = vector /************* not correct this is still empty ************ */
-    const item = new schemas.Items(obj)
-    console.log(item)
-    try {
+        //let process = child_process.exec('python')
+        await postpy(param).then(result => {obj.vector = result})
+        const item = new schemas.Items(obj)
         await item.save()
-        .then(res.send("successfully insert"))
-        .catch(error => console.error('Error saving item:', error));
+            .then(res.status(201).send("successfully insert"))
+            .catch(error => console.error('Error saving item:', error));
+        
+        res.end();
     } catch (error) {
         res.status(500).send(error)
     }
-    res.end();
-    
+    // Create an instance of the Items model
 }))
 
 router.get('/callpy', asyncHandler(async (req, res) => {
@@ -200,16 +184,38 @@ router.get('/callpy', asyncHandler(async (req, res) => {
     try {
         let param1 = req.query.param1
         let param2 = req.query.param2
-		let process = child_process.spawn('python', ["./routes/testpy.py", param1, param2]) //create a child process
+		let process = child_process.spawn('python', ["./routes/findpy.py", param1, param2]) //create a child process
         process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
             const text = data.toString('utf8')
             console.log(text)
-            res.status(201).json({a: text}) //response to client
+            res.status(200).json({a: text}) //response to client
         })
 	} catch (error) {
 		res.status(500).send(error)
 	}
    
 }))
+
+function postpy(param){ //Promise python wrapper
+    let process = child_process.spawn('python', ["./routes/postpy.py", param]) //create a child process
+    return new Promise((resolve)=>{
+        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
+            const text = data.toString('utf8')
+            vector = JSON.parse(text) //python return JSON string, parse it!
+            resolve(vector)
+        })
+    })
+}
+
+function findpy(param1, param2, param3){ //Promise python wrapper
+    let process = child_process.spawn('python', ["./routes/findpy.py", param1, param2, param3]) //create a child process
+    return new Promise((resolve)=>{
+        process.stdout.on('data', (data) => { //collect output form child process. Remember to do sys.stdout.flush() in .py
+            const text = data.toString('utf8')
+            resolve(text)
+        })
+    })
+   
+}
 
 module.exports = router
