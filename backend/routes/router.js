@@ -186,13 +186,11 @@ router.post('/addItem', asyncHandler(async (req, res) => {
     };*/
     // example of body 
     //generate vector for item
-    //console.log(req.body)
-    let obj = JSON.parse(JSON.stringify(req.body))
-    //let obj = JSON.parse(JSON.stringify(itemData))
+    let obj = req.body
+    
     //console.log('hi there')
     let param = obj.description
     //let param = "aa"
-    console.log('hi there')
     try {
         //let process = child_process.exec('python')
         await postpy(param).then(result => {obj.vector = result})
