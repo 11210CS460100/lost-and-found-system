@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react"
-import axios from "axios"
+import { useState, useRef } from "react"
+import axios from "axios";
 
 import ItemBlock from "../components/ItemBlock";
 import SearchBar from "../components/SearchBar";
-import AddItem from "./AddItem";
+import Searching from "../components/Searching";
 
 // now replace the content https://imgur.com/a/GbM6sKT with the image ../assets/images/eat-sleep-code-repeat.jpg
 // now replace the content https://imgur.com/a/y7a2zwZ with the image ../assets/images/good-day-to-code.jpg
@@ -34,80 +34,63 @@ const itemSchema = new Schema({
 
 // Also, the backend team will create the APIs for the frontend team to use, which will be released later on
 
+
 export default function Home() {
     const [items, setItems] = useState([])
+    const [isWaiting, setIsWaiting] = useState(false)
 
-    const searchBarChange = (e) => {
-        let str = e.target.value;
-        let isMessageEmpty = str === ""
+    const cancelController = useRef(new AbortController())
+    
+    const searchBarSubmit = (userInput) => {
+        let isMessageEmpty = userInput === ""
 
         if(!isMessageEmpty)
         {
-            let keywords = str.split(',')
-            keywords = keywords.map((word) => word.trim()).filter(str => str)
-            // console.log("keywords = " + keywords)
-            // console.log("items = " + items)
-            getItemsFromBackend(keywords)
+            let userDescriptions = userInput.split(',')
+            userDescriptions = userDescriptions.map((word) => word.trim()).filter(userInput => userInput)
+
+            getItemsFromBackend(userDescriptions)
             // setItems(() => [e.target.value, ...items])  // add item to the front to prevent scrolling
         }
     }
 
-    const [isWaiting, setIsWaiting] = useState(false)
-    const waitTest = async () => {
-        let isDone = false
 
-        await axios.get('http://127.0.0.1:4000/keywordsResult')
-        .then(res => {
-            console.log(res.data)
-            isDone = res.data === ""
-        })
+    const getItemsFromBackend = async (userDescriptions) => {
+        if(isWaiting === true) return
 
-        return isDone
-    }
+        setIsWaiting(true)
+        cancelController.current = new AbortController()
 
-    useEffect((e) =>{
-        const f = async () => {
-            
-            if(isWaiting)
-            {
-                console.log("prev")
-
-                let isDone = false
-                while(!isDone)
-                {
-                    isDone = await waitTest()
-                }
-                setIsWaiting(false)
-                console.log("after")
-            }
-        }
-        f()
-    }, [isWaiting])
-
-    const getItemsFromBackend = async (keywords) => {
-        await axios.post('http://127.0.0.1:4000/keywords', {
+        await axios.post('http://127.0.0.1:4000/finding/description', {
             method: "post",
-            body: JSON.stringify(keywords),
+            body: JSON.stringify(userDescriptions),
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+        }, {
+            signal: cancelController.current.signal
         })
         .then(res => {
             let filteredItems = res.data
-            console.log(res)
-            setIsWaiting(true)
-            // setItems(filteredItems)
+            setItems(filteredItems)
         })
         .catch(err => console.log(err))
 
+        setIsWaiting(false)
     }
 
-
+    const cancelFetchingItems = (e) => {
+        cancelController.current.abort()
+    }
 
     return (
-
         <div>
-            <SearchBar searchBarChangedCallback={searchBarChange} />
+            {
+                isWaiting 
+                ? <Searching cancelCallback={cancelFetchingItems} />
+                : null
+            }
+            <SearchBar searchBarSubmitCallback={searchBarSubmit} />
             <br/>
             <ItemBlock items={items}> </ItemBlock>
         </div>

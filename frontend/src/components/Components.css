@@ -72,3 +72,21 @@
     border-radius: 5px;
 }
 /* add item */
+
+/* Loading */
+.searching .background{
+    position: absolute;
+    font-size: 50px;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    button{
+        position: relative;
+        top: 10%;
+    }    
+}
+
+/* Loading */
