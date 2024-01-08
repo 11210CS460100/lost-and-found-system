@@ -61,13 +61,7 @@ export default function Home() {
         setIsWaiting(true)
         cancelController.current = new AbortController()
 
-        await axios.post('http://127.0.0.1:4000/finding/description', {
-            method: "post",
-            body: JSON.stringify(userDescriptions),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        }, {
+        await axios.post('http://127.0.0.1:4000/finding/description', {"description" : userDescriptions }, {
             signal: cancelController.current.signal
         })
         .then(res => {

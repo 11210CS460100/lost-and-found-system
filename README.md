@@ -29,6 +29,13 @@ cd frontend
 npm start
 ```
 
+if you want to do it simultaneously,you can run the following
+
+```javascript
+cd backend
+npm run project
+```
+
 In backend, since we use python child_process, mind that python module **sentence_transformers** is required.
 
 Please use **python 3.9**, other version may have problem.
