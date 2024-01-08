@@ -187,14 +187,19 @@ router.post('/addItem', asyncHandler(async (req, res) => {
     // example of body 
     //generate vector for item
     let obj = req.body
-    
+
     //console.log('hi there')
     let param = obj.description
     //let param = "aa"
     try {
         //let process = child_process.exec('python')
         await postpy(param).then(result => {obj.vector = result})
-        const item = new schemas.Items(obj)
+        var item = new schemas.Items(obj)
+        if (obj.finder) {
+            item.finder.name = obj.finder.finderName || 'Anonymous'; 
+            item.finder.contact = obj.finder.finderContact;
+        }
+        //console.log(item)
         await item.save()
             .then(res.status(201).send("successfully insert"))
             .catch(error => console.error('Error saving item:', error));
