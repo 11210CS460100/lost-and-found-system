@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import axios from "axios";
 
 import ItemBlock from "../components/ItemBlock";
@@ -80,9 +80,23 @@ export default function Home() {
         setIsWaiting(false)
     }
 
+    const getAllItemsFromBackend = async () => {
+        await axios.get('http://127.0.0.1:4000/view')
+        .then(res => {
+            let items = res.data
+            console.log(items)
+            setItems(items)
+        })
+        .catch(err => console.log(err))
+    }
+
     const cancelFetchingItems = (e) => {
         cancelController.current.abort()
     }
+
+    useEffect(() => {
+        getAllItemsFromBackend()
+    }, [])
 
     return (
         <div>

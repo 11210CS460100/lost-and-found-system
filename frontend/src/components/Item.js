@@ -9,10 +9,10 @@ export default function Item({description, picture, dateLost, locationFound, sta
             <p className="item-status">Status: {status}</p>
             {
                 finder.name == "Anonymous"
-                ? <p className="item-finderName">Anonymous</p>
+                ? <p className="item-finderName">Finder: Anonymous</p>
                 : <div>
-                    <p className="item-finderName">{finder.name}</p>
-                    <p className="item-finderContact">{finder.contact}</p>
+                    <p className="item-finderName">Finder: {finder.name}</p>
+                    <p className="item-finderContact">Contact: {finder.contact}</p>
                 </div>
             }
             <p className="item-description">Description: {description}</p>
