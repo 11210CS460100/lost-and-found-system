@@ -7,7 +7,7 @@ export default function Loading({ cancelCallback, info , pending}){
                 <div className="background">
                     <p >{info}</p>
                     {
-                        pending 
+                        pending
                         ?   <PacmanLoader className="loader" color="#36d7b7"/>
                         : null
                     }

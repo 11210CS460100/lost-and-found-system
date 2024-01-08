@@ -19,13 +19,14 @@
 }
 
 .item{
-    background-color: #d7d7d7;/*#a0dce0;*/
+    background-color: #d7d7d7a8;/*#a0dce0;*/
     padding: 5px;
     margin: 5px;
     border-radius: 20px;
     animation-name: fadeIn;
     animation-duration: 1.0s;
-    max-width: 100%;
+    width: 45%;
+    height: 45%;
     word-wrap: break-word;
     border: 3px solid black;
 }
@@ -36,9 +37,8 @@
     margin-left: auto;
     margin-right: auto;
 
-    max-width: 200px;
-    max-height: 200px;
-    /*padding: 4px*/
+    max-width: 40%;
+    max-height: 40%;
 }
 /* item */
 
@@ -63,17 +63,17 @@
     height: 50vb;
     border-radius: 20px;
 
-    min-height: 300px;
+    min-height: 40%;/*300px;*/
     border: 3px solid black;
+
+    input{
+        border-radius: 5px;
+    }
+    .lost-data, .location-found, .picture, .finder, .form-control{
+        margin:2%;
+    }
 }
 
-.background div{
-    margin: 9px;
-}
-
-.background input{
-    border-radius: 5px;
-}
 .child-description{
     width: 100%;
 }
@@ -90,7 +90,7 @@
     justify-content: center;
 
     p{
-        margin:20px 0px;
+        margin: 3%;
     }
 
     button{

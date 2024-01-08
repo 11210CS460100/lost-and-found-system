@@ -140,21 +140,21 @@ export default function AddItem({ setShowAddItem }) {
                     :
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* Lost Date */}
-                        <div>
+                        <div className="lost-data">
                             <label className="lostDate-label" htmlFor="lostDate">Lost Date:</label>
-                            <DatePicker showIcon selected={date} onChange={setdate}/>
+                            <DatePicker className="date-picker" showIcon selected={date} onChange={setdate}/>
                         </div>
                         {/* Lost Date */}
 
                         {/* Location Found */}
-                        <div>
+                        <div className="location-found">
                             <label className="locationFound-label" htmlFor="locationFound">Lost Found: </label>
                             <input type="text" name="locationFound"  placeholder='place' {...register("locationFound")}/>
                         </div>
                         {/* Location Found */}
 
                         {/* Picture */}
-                        <div>
+                        <div className="picture">
                             <label className="picture-label" htmlFor="picture">Picture: </label>
                             <input type="file" name="picture" onChange={getDescription}/>
                             {
@@ -172,7 +172,7 @@ export default function AddItem({ setShowAddItem }) {
                         {/* Picture */}
 
                         {/* Finder */}
-                        <div>
+                        <div className="finder">
                             <label className="finder-label" htmlFor="finder">Finder: </label>
                             <input
                                 type="checkbox"
