@@ -1,4 +1,4 @@
-import logo from '../assets/images/react-logo.png'
+import logo from '../assets/images/NTHU_logo.png'
 
 export default function Header({ setShowAddItem }) {
 
