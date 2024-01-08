@@ -15,7 +15,7 @@ const itemSchema = new Schema({
     locationFound: { type: String },
     status: { type: String, default: 'Unclaimed' }, // e.g., 'Claimed', 'Unclaimed'
     finder: finderSchema,
-    vector: { type: Array, required: true }
+    vector: { type: [Number], required: true }
 }, { versionKey: false }); // set the version to be false
 
 const Items = mongoose.model('Items', itemSchema)
