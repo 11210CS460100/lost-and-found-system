@@ -81,11 +81,15 @@ export default function Home() {
     }
 
     const getAllItemsFromBackend = async () => {
-        await axios.get('http://127.0.0.1:4000/view')
+        let param = {
+            index : 500
+        }
+
+        await axios.get('http://127.0.0.1:4000/view',  {params: param})
         .then(res => {
             let items = res.data
             console.log(items)
-            setItems(items)
+            setItems(items.reverse())
         })
         .catch(err => console.log(err))
     }
