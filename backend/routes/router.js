@@ -83,8 +83,8 @@ router.post('/finding/description', async(req, res) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(500).send('Database not connected');
     }
-    const query = String(req.body)
-    console.log(query)
+    let query = req.body.description
+    console.log(req.body.description)
     var query_vector
     try {
         let param = query
@@ -92,21 +92,21 @@ router.post('/finding/description', async(req, res) => {
         console.log(query)
         //await findpy(param1,param2,param3).then((result)=>{text = result})
         await postpy(param).then(result => {query_vector = result})
-        console.log(query_vector)
+        //console.log(query_vector)
         await schemas.Items.aggregate([
             {
-                "$vectorSearch": {
-                    "index": "vector_index",
-                    "path": "vector",
-                    "queryVector": query_vector,
-                    "numCandidates": 5,
-                    "limit": 5
+                $vectorSearch: {
+                    index: "default",
+                    path: "vector",
+                    queryVector: query_vector,
+                    numCandidates: 5,
+                    limit: 5
                 }
             },
             {
-                "$project": {
-                    "vector": 0,
-                    "score": { "$meta": "vectorSearchScore" }
+                $project: {
+                    vector: 0,
+                    score: { $meta: "searchScore" }
                 }
             }
           ])
@@ -194,6 +194,7 @@ router.post('/addItem', asyncHandler(async (req, res) => {
     try {
         //let process = child_process.exec('python')
         await postpy(param).then(result => {obj.vector = result})
+        console.log(obj.vector)
         const item = new schemas.Items(obj)
         await item.save()
             .then(res.status(201).send("successfully insert"))
